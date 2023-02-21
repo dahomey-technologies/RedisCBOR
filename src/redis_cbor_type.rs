@@ -1,7 +1,6 @@
 use cbor_data::CborOwned;
 use redis_module::{
-    key::{RedisKey, RedisKeyWritable}, native_types::RedisType, raw, RedisError, RedisModuleIO, RedisModuleString,
-    RedisModuleTypeMethods,
+    native_types::RedisType, raw, RedisModuleIO, RedisModuleString, RedisModuleTypeMethods,
 };
 use std::{
     ffi::{c_int, c_void},
@@ -82,16 +81,4 @@ unsafe extern "C" fn copy(
     let cbor = unsafe { &*(value as *mut CborOwned) };
     let cbor_cloned = cbor.clone();
     Box::into_raw(Box::new(cbor_cloned)).cast::<c_void>()
-}
-
-pub fn get_value(key: &RedisKey) -> Result<Option<&CborOwned>, RedisError> {
-    key.get_value::<CborOwned>(&REDIS_CBOR_TYPE)
-}
-
-pub fn get_writable_value(key: &RedisKeyWritable) -> Result<Option<&mut CborOwned>, RedisError> {
-    key.get_value::<CborOwned>(&REDIS_CBOR_TYPE)
-}
-
-pub fn set_value(key: &RedisKeyWritable, value: CborOwned) -> Result<(), RedisError> {
-    key.set_value(&REDIS_CBOR_TYPE, value)
 }

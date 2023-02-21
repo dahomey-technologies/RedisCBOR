@@ -17,9 +17,17 @@ name = "recbor"
 [dev-dependencies]
 serial_test = "1.0"
 env_logger = "0.10"
+cbor-diag = "0.1"
 
 [dependencies]
 libc = "0.2"
 cbor-data = "0.8"
-cborpath = "0.3"
+cborpath = "0.4"
 redis-module = { version="1.0", features = ["experimental-api"]}
+
+[features]
+# Workaround to allow cfg(feature = "test") in redismodue-rs dependencies:
+# https://github.com/RedisLabsModules/redismodule-rs/pull/68
+# This requires running the tests with `--features test`
+test = ["redis-module/test"]
+as-library = []
