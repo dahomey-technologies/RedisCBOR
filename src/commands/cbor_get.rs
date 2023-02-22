@@ -13,16 +13,16 @@ pub fn cbor_get(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
     };
 
     let key = ctx.open_key(&key);
-    let value = key.get_cbor_value()?;
+    let existing = key.get_cbor_value()?;
 
-    match get(value, &cbor_path) {
+    match get(existing, &cbor_path) {
         Some(value) => Ok(RedisValue::StringBuffer(value.into_vec())),
         None => Ok(RedisValue::Null),
     }
 }
 
-fn get(existing_value: Option<&CborOwned>, cbor_path: &CborPath) -> Option<CborOwned> {
-    existing_value.map(|value| {
+fn get(existing: Option<&CborOwned>, cbor_path: &CborPath) -> Option<CborOwned> {
+    existing.map(|value| {
         let results = cbor_path.read(value);
         CborBuilder::new().write_array(None, |builder| {
             for result in results {

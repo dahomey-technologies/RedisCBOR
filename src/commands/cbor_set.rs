@@ -21,7 +21,7 @@ pub fn cbor_set(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
     let value = args.next_arg()?;
 
     let cbor_path = CborPath::from_arg(&path)?;
-    let new_value = Cbor::from_arg(&value)?;
+    let value = Cbor::from_arg(&value)?;
 
     let mut options = SetOptions::None;
 
@@ -38,9 +38,9 @@ pub fn cbor_set(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
     }
 
     let key = ctx.open_key_writable(&key_name);
-    let existing_value = key.get_cbor_value()?;
+    let existing = key.get_cbor_value()?;
 
-    match set(existing_value, &cbor_path, new_value, options) {
+    match set(existing, &cbor_path, value, options) {
         SetResult::ErrConditionNotMet => Ok(RedisValue::Null),
         SetResult::ErrExpectedRoot => Err(RedisError::Str(
             "ERR new CBOR documents must be created with a root path",
@@ -63,16 +63,16 @@ enum SetResult {
 }
 
 fn set(
-    existing_value: Option<&CborOwned>,
+    existing: Option<&CborOwned>,
     cbor_path: &CborPath,
-    new_value: &Cbor,
+    value: &Cbor,
     options: SetOptions,
 ) -> SetResult {
-    match (existing_value, options) {
+    match (existing, options) {
         (Some(_), SetOptions::NotExists) => SetResult::ErrConditionNotMet,
         (None, SetOptions::AlreadyExists) => SetResult::ErrConditionNotMet,
         (Some(existing), _) => {
-            let new_value = cbor_path.set(existing, new_value);
+            let new_value = cbor_path.set(existing, value);
             if let Some(new_value) = new_value {
                 SetResult::Updated(new_value)
             } else {
@@ -81,7 +81,7 @@ fn set(
         }
         (None, _) => {
             if cbor_path.is_root() {
-                SetResult::Updated(new_value.to_owned())
+                SetResult::Updated(value.to_owned())
             } else {
                 SetResult::ErrExpectedRoot
             }
