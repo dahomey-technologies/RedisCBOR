@@ -4,7 +4,7 @@ use cborpath::CborPath;
 use redis_module::{Context, NextArg, RedisError, RedisResult, RedisString, RedisValue};
 
 ///
-/// CBOR.ARRLEN key key [path]
+/// CBOR.ARRLEN key [path]
 ///
 /// Report the length of the CBOR array at path in key
 pub fn cbor_arr_len(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
