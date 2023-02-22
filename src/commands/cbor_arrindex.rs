@@ -1,0 +1,177 @@
+use crate::util::{CborExt, CborKey, CborPathExt};
+use cbor_data::{Cbor, CborOwned, ItemKind};
+use cborpath::CborPath;
+use redis_module::{Context, NextArg, RedisError, RedisResult, RedisString, RedisValue};
+
+///
+/// CBOR.ARRINDEX key path value [start [stop]]
+///
+pub fn cbor_arr_index(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
+    let mut args = args.into_iter().skip(1);
+
+    let key_name = args.next_arg()?;
+    let path = args.next_arg()?;
+    let value = args.next_arg()?;
+    let start = args.next().map_or(Ok(0), |v| v.parse_integer())? as isize;
+    let stop = args.next().map_or(Ok(0), |v| v.parse_integer())? as isize;
+
+    let cbor_path = CborPath::from_arg(&path)?;
+    let value = Cbor::from_arg(&value)?;
+
+    let key = ctx.open_key(&key_name);
+    let Some(existing) = key.get_cbor_value()? else {
+        return Err(RedisError::nonexistent_key());
+    };
+
+    Ok(array_index(&cbor_path, existing, value, start, stop)
+        .into_iter()
+        .map(|i| match i {
+            Some(i) => (i as i64).into(),
+            None => RedisValue::Null,
+        })
+        .collect::<Vec<RedisValue>>()
+        .into())
+}
+
+fn array_index(
+    cbor_path: &CborPath,
+    existing: &CborOwned,
+    value: &Cbor,
+    start: isize,
+    stop: isize,
+) -> Vec<Option<isize>> {
+    let results = cbor_path.read(existing);
+    let mut matches = Vec::<Option<isize>>::new();
+
+    for result in results {
+        if let ItemKind::Array(array) = result.kind() {
+            let index: isize = match (start, stop) {
+                (start, stop) if start >= 0 && stop >= 0 && stop > start => array
+                    .skip(start as usize)
+                    .take((stop - start) as usize)
+                    .position(|item| item == value)
+                    .map(|idx| (idx + start as usize) as isize)
+                    .unwrap_or_else(|| -1),
+                (start, stop) if start >= 0 && stop == -1 => array
+                    .skip(start as usize)
+                    .position(|item| item == value)
+                    .map(|idx| (idx + start as usize) as isize)
+                    .unwrap_or_else(|| -1),
+                (start, stop)
+                    if (start >= 0 && stop >= 0 || start < 0 && stop < 0) && stop <= start =>
+                {
+                    println!("meep");
+                    -1
+                }
+                _ => match array.size() {
+                    Some(len) => {
+                        let start = normalize_index(start, len as usize);
+                        let stop = normalize_index(stop, len as usize);
+                        println!("start: {start}, stop: {stop}");
+                        array
+                            .skip(start as usize)
+                            .take((stop - start) as usize)
+                            .position(|item| item == value)
+                            .map(|idx| (idx + start as usize) as isize)
+                            .unwrap_or_else(|| -1)
+                    }
+                    None => {
+                        let array = array.collect::<Vec<_>>();
+                        let start = normalize_index(start, array.len());
+                        let stop = normalize_index(stop, array.len());
+                        array
+                            .into_iter()
+                            .skip(start as usize)
+                            .take((stop - start) as usize)
+                            .position(|item| item == value)
+                            .map(|idx| (idx + start as usize) as isize)
+                            .unwrap_or_else(|| -1)
+                    }
+                },
+            };
+
+            matches.push(Some(index))
+        } else {
+            matches.push(None);
+        }
+    }
+
+    matches
+}
+
+#[must_use]
+#[inline]
+fn normalize_index(i: isize, len: usize) -> usize {
+    if i >= 0 {
+        (i as usize).min(len - 1)
+    } else {
+        0.max((len as isize + i) as usize)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::array_index;
+    use crate::util::diag_to_cbor;
+    use cborpath::CborPath;
+
+    #[test]
+    fn simple_array() {
+        let cbor = diag_to_cbor(r#"["a","b","c","d"]"#);
+        let value = diag_to_cbor(r#""b""#);
+
+        // ["$"]
+        let cbor_path = CborPath::root();
+
+        let results = array_index(&cbor_path, &cbor, &value, 0, 4);
+        assert_eq!(vec![Some(1)], results);
+
+        let results = array_index(&cbor_path, &cbor, &value, 0, -2);
+        assert_eq!(vec![Some(1)], results);
+
+        let results = array_index(&cbor_path, &cbor, &value, 3, 0);
+        assert_eq!(vec![Some(-1)], results);
+
+        let results = array_index(&cbor_path, &cbor, &value, 4, 5);
+        assert_eq!(vec![Some(-1)], results);
+
+        let results = array_index(&cbor_path, &cbor, &value, -2, -1);
+        assert_eq!(vec![Some(1)], results);
+    }
+
+    #[test]
+    fn deep_array() {
+        let cbor = diag_to_cbor(r#"{"foo":["a","b","c"]}"#);
+        let value = diag_to_cbor(r#""c""#);
+
+        // ["$", "foo"]
+        let cbor_path = CborPath::builder().key("foo").build();
+        let results = array_index(&cbor_path, &cbor, &value, 0, 3);
+
+        assert_eq!(vec![Some(2)], results);
+    }
+
+    #[test]
+    fn multiple_arrays() {
+        let cbor = diag_to_cbor(r#"{"foo":["a","b","c"],"bar":["c","b","a"]}"#);
+        let value = diag_to_cbor(r#""c""#);
+
+        // ["$", "*"]
+        let cbor_path = CborPath::builder().wildcard().build();
+        let results = array_index(&cbor_path, &cbor, &value, 0, 4);
+
+        assert_eq!(vec![Some(2), Some(0)], results);
+    }
+
+    #[test]
+    fn not_an_array_not_found() {
+        let cbor = diag_to_cbor(r#"{"foo":12,"bar":["a","b","c"]}"#);
+        let value = diag_to_cbor(r#""d""#);
+
+        // ["$", "*"]
+        let cbor_path = CborPath::builder().wildcard().build();
+        let results = array_index(&cbor_path, &cbor, &value, 0, 4);
+
+        assert_eq!(vec![None, Some(-1)], results);
+    }
+}

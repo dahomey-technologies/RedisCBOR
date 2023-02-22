@@ -11,3 +11,4 @@ It is based on [RedisJson](https://redis.io/docs/stack/json/) for its concepts, 
 * [CBORPath](https://github.com/dahomey-technologies/cborpath-rs) syntax for selecting elements inside documents
 * Documents are stored as raw CBOR binary data, allowing reduced memory footprint
 * Typed atomic operations for all CBOR types
+ 
