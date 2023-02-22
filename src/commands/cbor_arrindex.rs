@@ -60,14 +60,12 @@ fn array_index(
                 (start, stop)
                     if (start >= 0 && stop >= 0 || start < 0 && stop < 0) && stop <= start =>
                 {
-                    println!("meep");
                     -1
                 }
                 _ => match array.size() {
                     Some(len) => {
                         let start = normalize_index(start, len as usize);
                         let stop = normalize_index(stop, len as usize);
-                        println!("start: {start}, stop: {stop}");
                         array
                             .skip(start as usize)
                             .take((stop - start) as usize)
@@ -135,7 +133,7 @@ mod tests {
         let results = array_index(&cbor_path, &cbor, &value, 4, 5);
         assert_eq!(vec![Some(-1)], results);
 
-        let results = array_index(&cbor_path, &cbor, &value, -2, -1);
+        let results = array_index(&cbor_path, &cbor, &value, -3, -1);
         assert_eq!(vec![Some(1)], results);
     }
 
