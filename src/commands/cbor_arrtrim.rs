@@ -1,10 +1,8 @@
-use std::borrow::Cow;
-
+use crate::util::{apply_changes, normalize_index, CborKeyWritable, CborPathExt, NextArgExt};
 use cbor_data::{Cbor, CborBuilder, CborOwned, ItemKind, Writer};
 use cborpath::CborPath;
 use redis_module::{Context, RedisError, RedisResult, RedisString, RedisValue};
-
-use crate::util::{apply_changes, normalize_index, CborKeyWritable, CborPathExt, NextArgExt};
+use std::borrow::Cow;
 
 ///
 /// CBOR.ARRTRIM key [path [start [stop]]]

@@ -20,6 +20,7 @@ redis_module! {
         ["cbor.arrlen", commands::cbor_arr_len, "readonly", 1, 1, 1],
         ["cbor.arrpop", commands::cbor_arr_pop, "write deny-oom", 1, 1, 1],
         ["cbor.arrtrim", commands::cbor_arr_trim, "write deny-oom", 1, 1, 1],
+        ["cbor.clear", commands::cbor_clear, "write deny-oom", 1, 1, 1],
         ["cbor.debug", commands::cbor_debug, "readonly", 2, 2, 1],
         ["cbor.get", commands::cbor_get, "readonly", 1, 1, 1],
         ["cbor.set", commands::cbor_set, "write deny-oom", 1, 1, 1],

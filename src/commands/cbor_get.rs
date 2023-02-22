@@ -1,18 +1,18 @@
-use crate::util::{CborKey, CborPathExt};
+use crate::util::{CborKey, CborPathExt, NextArgExt};
 use cbor_data::{CborBuilder, CborOwned, Writer};
 use cborpath::CborPath;
-use redis_module::{Context, RedisResult, RedisString, RedisValue, NextArg};
+use redis_module::{Context, RedisResult, RedisString, RedisValue};
 
 pub fn cbor_get(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
-    let mut args = args.into_iter().skip(1);
+    let mut args = args.iter().skip(1);
 
     let key = args.next_arg()?;
     let cbor_path = match args.next_arg() {
-        Ok(cbor_path) => CborPath::from_arg(&cbor_path)?,
+        Ok(cbor_path) => CborPath::from_arg(cbor_path)?,
         Err(_) => CborPath::root(),
     };
 
-    let key = ctx.open_key(&key);
+    let key = ctx.open_key(key);
     let existing = key.get_cbor_value()?;
 
     match get(existing, &cbor_path) {
