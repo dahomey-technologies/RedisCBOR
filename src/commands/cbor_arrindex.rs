@@ -13,7 +13,7 @@ pub fn cbor_arr_index(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
     let path = args.next_arg()?;
     let value = args.next_arg()?;
     let start = args.next().map_or(Ok(0), |v| v.parse_integer())? as isize;
-    let stop = args.next().map_or(Ok(0), |v| v.parse_integer())? as isize;
+    let stop = args.next().map_or(Ok(-1), |v| v.parse_integer())? as isize;
 
     let cbor_path = CborPath::from_arg(&path)?;
     let value = Cbor::from_arg(&value)?;
