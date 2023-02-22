@@ -54,7 +54,8 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: Run cargo test --features test
+      - name: Run cargo test
         uses: actions-rs/cargo@v1
         with:
           command: test
+          args: --features test
