@@ -3,10 +3,10 @@ use cbor_data::{Cbor, CborOwned, ItemKind};
 use cborpath::CborPath;
 use redis_module::{Context, NextArg, RedisError, RedisResult, RedisString, RedisValue};
 
-///
-/// CBOR.ARRINDEX key path value [start [stop]]
-///
-pub fn cbor_arr_index(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
+    ///
+    /// CBOR.ARRINDEX key path value [start [stop]]
+    ///
+    pub fn cbor_arr_index(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
     let mut args = args.into_iter().skip(1);
 
     let key_name = args.next_arg()?;
@@ -23,12 +23,12 @@ pub fn cbor_arr_index(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
         return Err(RedisError::nonexistent_key());
     };
 
-    Ok(array_index(&cbor_path, existing, value, start, stop).into())
+    Ok(array_index(existing, &cbor_path, value, start, stop).into())
 }
 
 fn array_index(
-    cbor_path: &CborPath,
     existing: &CborOwned,
+    cbor_path: &CborPath,
     value: &Cbor,
     start: isize,
     stop: isize,
@@ -114,19 +114,19 @@ mod tests {
         // ["$"]
         let cbor_path = CborPath::root();
 
-        let results = array_index(&cbor_path, &cbor, &value, 0, 4);
+        let results = array_index(&cbor, &cbor_path, &value, 0, 4);
         assert_eq!(vec![RedisValue::Integer(1)], results);
 
-        let results = array_index(&cbor_path, &cbor, &value, 0, -2);
+        let results = array_index(&cbor, &cbor_path, &value, 0, -2);
         assert_eq!(vec![RedisValue::Integer(1)], results);
 
-        let results = array_index(&cbor_path, &cbor, &value, 3, 0);
+        let results = array_index(&cbor, &cbor_path, &value, 3, 0);
         assert_eq!(vec![RedisValue::Integer(-1)], results);
 
-        let results = array_index(&cbor_path, &cbor, &value, 4, 5);
+        let results = array_index(&cbor, &cbor_path, &value, 4, 5);
         assert_eq!(vec![RedisValue::Integer(-1)], results);
 
-        let results = array_index(&cbor_path, &cbor, &value, -3, -1);
+        let results = array_index(&cbor, &cbor_path, &value, -3, -1);
         assert_eq!(vec![RedisValue::Integer(1)], results);
     }
 
@@ -137,7 +137,7 @@ mod tests {
 
         // ["$", "foo"]
         let cbor_path = CborPath::builder().key("foo").build();
-        let results = array_index(&cbor_path, &cbor, &value, 0, 3);
+        let results = array_index(&cbor, &cbor_path, &value, 0, 3);
 
         assert_eq!(vec![RedisValue::Integer(2)], results);
     }
@@ -149,7 +149,7 @@ mod tests {
 
         // ["$", "*"]
         let cbor_path = CborPath::builder().wildcard().build();
-        let results = array_index(&cbor_path, &cbor, &value, 0, 4);
+        let results = array_index(&cbor, &cbor_path, &value, 0, 4);
 
         assert_eq!(vec![RedisValue::Integer(2), RedisValue::Integer(0)], results);
     }
@@ -161,7 +161,7 @@ mod tests {
 
         // ["$", "*"]
         let cbor_path = CborPath::builder().wildcard().build();
-        let results = array_index(&cbor_path, &cbor, &value, 0, 4);
+        let results = array_index(&cbor, &cbor_path, &value, 0, 4);
 
         assert_eq!(vec![RedisValue::Null, RedisValue::Integer(-1)], results);
     }
