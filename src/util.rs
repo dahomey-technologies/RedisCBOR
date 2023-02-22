@@ -98,6 +98,7 @@ impl CborOwnedExt for CborOwned {
 
 pub trait NextArgExt<'a> {
     fn next_arg(&mut self) -> Result<&'a RedisString, RedisError>;
+    fn next_i64(&mut self) -> Result<i64, RedisError>;
 }
 
 impl<'a, T> NextArgExt<'a> for T
@@ -107,6 +108,12 @@ where
     #[inline]
     fn next_arg(&mut self) -> Result<&'a RedisString, RedisError> {
         self.next().ok_or(RedisError::WrongArity)
+    }
+
+    #[inline]
+    fn next_i64(&mut self) -> Result<i64, RedisError> {
+        self.next()
+            .map_or(Err(RedisError::WrongArity), |v| v.parse_integer())
     }
 }
 

@@ -12,7 +12,7 @@ pub fn cbor_arr_insert(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
 
     let key_name = args.next_arg()?;
     let path = args.next_arg()?;
-    let index = args.next().map_or(Ok(0), |v| v.parse_integer())? as isize;
+    let index = args.next_i64()? as isize;
 
     // We require at least one CBOR value to append
     args.peek().ok_or(RedisError::WrongArity)?;
