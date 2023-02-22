@@ -91,7 +91,6 @@ where
         }
 
         if let Some(item) = existing_items.next() {
-            println!("popped_item: {:?}", item);
             popped_items.push(RedisValue::StringBuffer(item.as_slice().to_vec()));
         }
 
