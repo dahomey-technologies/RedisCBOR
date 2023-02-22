@@ -1,5 +1,5 @@
-use crate::util::{CborKey, CborOwnedExt};
-use redis_module::{Context, NextArg, RedisError, RedisResult, RedisString};
+use crate::util::{CborKey, CborOwnedExt, NextArgExt};
+use redis_module::{Context, RedisError, RedisResult, RedisString};
 
 ///
 /// CBOT.DEBUG <subcommand & arguments>
@@ -9,12 +9,12 @@ use redis_module::{Context, NextArg, RedisError, RedisResult, RedisString};
 /// HELP
 ///
 pub fn cbor_debug(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
-    let mut args = args.into_iter().skip(1);
+    let mut args = args.iter().skip(1);
 
     match args.next_str()?.to_uppercase().as_str() {
         "MEMORY" => {
             let key = args.next_arg()?;
-            let key = ctx.open_key(&key);
+            let key = ctx.open_key(key);
 
             Ok(key
                 .get_cbor_value()?

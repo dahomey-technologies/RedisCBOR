@@ -1,7 +1,7 @@
-use crate::util::{apply_changes, CborKeyWritable, CborPathExt, CborExt};
+use crate::util::{apply_changes, CborExt, CborKeyWritable, CborPathExt, NextArgExt};
 use cbor_data::{Cbor, CborOwned};
 use cborpath::CborPath;
-use redis_module::{Context, NextArg, RedisError, RedisResult, RedisString, RedisValue, REDIS_OK};
+use redis_module::{Context, RedisError, RedisResult, RedisString, RedisValue, REDIS_OK};
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum SetOptions {
@@ -12,16 +12,16 @@ pub enum SetOptions {
 
 ///
 /// CBOR.SET key path value [NX | XX]
-/// 
+///
 pub fn cbor_set(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
-    let mut args = args.into_iter().skip(1);
+    let mut args = args.iter().skip(1);
 
     let key_name = args.next_arg()?;
     let path = args.next_arg()?;
     let value = args.next_arg()?;
 
-    let cbor_path = CborPath::from_arg(&path)?;
-    let value = Cbor::from_arg(&value)?;
+    let cbor_path = CborPath::from_arg(path)?;
+    let value = Cbor::from_arg(value)?;
 
     let mut options = SetOptions::None;
 
@@ -37,7 +37,7 @@ pub fn cbor_set(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
         };
     }
 
-    let key = ctx.open_key_writable(&key_name);
+    let key = ctx.open_key_writable(key_name);
     let existing = key.get_cbor_value()?;
 
     match set(existing, &cbor_path, value, options) {
@@ -47,7 +47,7 @@ pub fn cbor_set(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
         )),
         SetResult::Updated(new_value) => {
             key.set_cbor_value(new_value)?;
-            apply_changes(ctx, "cbor.set", &key_name)?;
+            apply_changes(ctx, "cbor.set", key_name)?;
             REDIS_OK
         }
         SetResult::NoMatch => REDIS_OK,

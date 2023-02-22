@@ -1,13 +1,13 @@
-use crate::util::{normalize_index, CborExt, CborKey, CborPathExt};
+use crate::util::{normalize_index, CborExt, CborKey, CborPathExt, NextArgExt};
 use cbor_data::{Cbor, CborOwned, ItemKind};
 use cborpath::CborPath;
-use redis_module::{Context, NextArg, RedisError, RedisResult, RedisString, RedisValue};
+use redis_module::{Context, RedisError, RedisResult, RedisString, RedisValue};
 
 ///
 /// CBOR.ARRINDEX key path value [start [stop]]
 ///
 pub fn cbor_arr_index(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
-    let mut args = args.into_iter().skip(1);
+    let mut args = args.iter().skip(1);
 
     let key_name = args.next_arg()?;
     let path = args.next_arg()?;
@@ -15,10 +15,10 @@ pub fn cbor_arr_index(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
     let start = args.next().map_or(Ok(0), |v| v.parse_integer())? as isize;
     let stop = args.next().map_or(Ok(-1), |v| v.parse_integer())? as isize;
 
-    let cbor_path = CborPath::from_arg(&path)?;
-    let value = Cbor::from_arg(&value)?;
+    let cbor_path = CborPath::from_arg(path)?;
+    let value = Cbor::from_arg(value)?;
 
-    let key = ctx.open_key(&key_name);
+    let key = ctx.open_key(key_name);
     let Some(existing) = key.get_cbor_value()? else {
         return Err(RedisError::nonexistent_key());
     };
