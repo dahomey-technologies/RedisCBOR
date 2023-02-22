@@ -1,3 +1,4 @@
+use crate::util::CborOwnedExt;
 use cbor_data::CborOwned;
 use redis_module::{
     native_types::RedisType, raw, RedisModuleIO, RedisModuleString, RedisModuleTypeMethods,
@@ -58,8 +59,7 @@ unsafe extern "C" fn aof_rewrite(
 
 unsafe extern "C" fn mem_usage(value: *const c_void) -> usize {
     let cbor = unsafe { &*(value as *mut CborOwned) };
-    let bytes = cbor.as_slice();
-    bytes.len()
+    cbor.mem_usage()
 }
 
 unsafe extern "C" fn free(value: *mut c_void) {

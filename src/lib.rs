@@ -14,6 +14,8 @@ redis_module! {
     version: 1,
     data_types: [REDIS_CBOR_TYPE],
     commands: [
+        ["cbor.arrappend", commands::cbor_arr_append, "write deny-oom", 1, 1, 1],
+        ["cbor.debug", commands::cbor_debug, "readonly", 1, 1, 1],
         ["cbor.get", commands::cbor_get, "readonly", 1, 1, 1],
         ["cbor.set", commands::cbor_set, "write deny-oom", 1, 1, 1],
     ],

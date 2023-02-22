@@ -1,9 +1,9 @@
 use crate::redis_cbor_type::REDIS_CBOR_TYPE;
-#[cfg(test)]
 use cbor_data::Cbor;
 use cbor_data::CborOwned;
 #[cfg(test)]
 use cbor_diag::{parse_bytes, parse_diag};
+use cborpath::CborPath;
 use redis_module::{
     key::{RedisKey, RedisKeyWritable},
     Context, NotifyEvent, RedisError, RedisString, Status,
@@ -51,6 +51,62 @@ impl CborKeyWritable for RedisKeyWritable {
     #[inline]
     fn set_cbor_value(&self, value: CborOwned) -> Result<(), RedisError> {
         self.set_value(&REDIS_CBOR_TYPE, value)
+    }
+}
+
+pub trait CborPathExt: Sized {
+    fn from_arg(arg: &RedisString) -> Result<Self, RedisError>;
+}
+
+impl CborPathExt for CborPath {
+    #[inline]
+    fn from_arg(arg: &RedisString) -> Result<Self, RedisError> {
+        CborPath::from_bytes(arg.as_slice()).map_err(|_| RedisError::Str("ERR Invalid CBORPath"))
+    }
+}
+
+pub trait CborExt {
+    fn from_arg(arg: &RedisString) -> Result<&Cbor, RedisError>;
+}
+
+impl CborExt for Cbor {
+    #[inline]
+    fn from_arg(arg: &RedisString) -> Result<&Cbor, RedisError> {
+        Cbor::checked(arg.as_slice()).map_err(|_| RedisError::Str("ERR Invalid CBOR path"))
+    }
+}
+
+pub trait CborOwnedExt {
+    fn mem_usage(&self) -> usize;
+}
+
+impl CborOwnedExt for CborOwned {
+    #[inline]
+    fn mem_usage(&self) -> usize {
+        // CborOwned definition: pub struct CborOwned(SmallVec<[u8; 16]>);
+        let len = self.as_slice().len();
+        let size_of_struct = std::mem::size_of::<CborOwned>();
+        if len > 16 {
+            // allocated buffer
+            size_of_struct + len
+        } else {
+            // in-place buffer
+            size_of_struct
+        }
+    }
+}
+
+pub trait NextArgExt<'a> {
+    fn next_arg(&mut self) -> Result<&'a RedisString, RedisError>;
+}
+
+impl<'a, T> NextArgExt<'a> for T
+where
+    T: Iterator<Item = &'a RedisString>,
+{
+    #[inline]
+    fn next_arg(&mut self) -> Result<&'a RedisString, RedisError> {
+        self.next().ok_or(RedisError::WrongArity)
     }
 }
 

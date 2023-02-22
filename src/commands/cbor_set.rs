@@ -1,4 +1,4 @@
-use crate::util::{apply_changes, CborKeyWritable};
+use crate::util::{apply_changes, CborKeyWritable, CborPathExt, CborExt};
 use cbor_data::{Cbor, CborOwned};
 use cborpath::CborPath;
 use redis_module::{Context, NextArg, RedisError, RedisResult, RedisString, RedisValue, REDIS_OK};
@@ -10,20 +10,18 @@ pub enum SetOptions {
     None,
 }
 
+///
+/// CBOR.SET key path value [NX | XX]
+/// 
 pub fn cbor_set(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
     let mut args = args.into_iter().skip(1);
 
     let key_name = args.next_arg()?;
-    let cbor_path = args.next_arg()?;
-    let new_value = args.next_arg()?;
+    let path = args.next_arg()?;
+    let value = args.next_arg()?;
 
-    let Ok(cbor_path) = CborPath::from_bytes(cbor_path.as_slice()) else {
-        return Err(RedisError::Str("ERR Invalid CBOR path"));
-    };
-
-    let Ok(new_value) = Cbor::checked(new_value.as_slice()) else {
-        return Err(RedisError::Str("ERR Invalid CBOR value"));
-    };
+    let cbor_path = CborPath::from_arg(&path)?;
+    let new_value = Cbor::from_arg(&value)?;
 
     let mut options = SetOptions::None;
 
