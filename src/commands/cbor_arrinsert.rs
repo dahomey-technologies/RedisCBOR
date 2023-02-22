@@ -1,4 +1,6 @@
-use crate::util::{apply_changes, CborExt, CborKeyWritable, CborPathExt, NextArgExt};
+use crate::util::{
+    apply_changes, normalize_index, CborExt, CborKeyWritable, CborPathExt, NextArgExt,
+};
 use cbor_data::{Cbor, CborBuilder, CborOwned, ItemKind, Writer};
 use cborpath::CborPath;
 use redis_module::{Context, RedisError, RedisResult, RedisString, RedisValue};
@@ -107,15 +109,6 @@ where
 
         array_sizes.push(RedisValue::Integer(size as i64));
     })
-}
-
-#[inline]
-fn normalize_index(i: isize, len: usize) -> usize {
-    if i >= 0 {
-        (i as usize).min(len - 1)
-    } else {
-        0.max((len as isize + i) as usize)
-    }
 }
 
 #[cfg(test)]

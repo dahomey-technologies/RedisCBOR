@@ -1,12 +1,12 @@
-use crate::util::{CborExt, CborKey, CborPathExt};
+use crate::util::{normalize_index, CborExt, CborKey, CborPathExt};
 use cbor_data::{Cbor, CborOwned, ItemKind};
 use cborpath::CborPath;
 use redis_module::{Context, NextArg, RedisError, RedisResult, RedisString, RedisValue};
 
-    ///
-    /// CBOR.ARRINDEX key path value [start [stop]]
-    ///
-    pub fn cbor_arr_index(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
+///
+/// CBOR.ARRINDEX key path value [start [stop]]
+///
+pub fn cbor_arr_index(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
     let mut args = args.into_iter().skip(1);
 
     let key_name = args.next_arg()?;
@@ -90,15 +90,6 @@ fn array_index(
     matches
 }
 
-#[inline]
-fn normalize_index(i: isize, len: usize) -> usize {
-    if i >= 0 {
-        (i as usize).min(len - 1)
-    } else {
-        0.max((len as isize + i) as usize)
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::array_index;
@@ -151,7 +142,10 @@ mod tests {
         let cbor_path = CborPath::builder().wildcard().build();
         let results = array_index(&cbor, &cbor_path, &value, 0, 4);
 
-        assert_eq!(vec![RedisValue::Integer(2), RedisValue::Integer(0)], results);
+        assert_eq!(
+            vec![RedisValue::Integer(2), RedisValue::Integer(0)],
+            results
+        );
     }
 
     #[test]

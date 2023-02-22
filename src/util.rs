@@ -117,6 +117,15 @@ where
     }
 }
 
+#[inline]
+pub fn normalize_index(i: isize, len: usize) -> usize {
+    if i >= 0 {
+        (i as usize).min(len - 1)
+    } else {
+        0.max((len as isize + i) as usize)
+    }
+}
+
 #[cfg(test)]
 pub fn diag_to_cbor(cbor_diag_str: &str) -> CborOwned {
     let buf = diag_to_bytes(cbor_diag_str);
