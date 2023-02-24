@@ -1,8 +1,8 @@
+use super::num_operation::{num_operation, Number};
 use crate::util::{apply_changes, CborExt, CborKeyWritable, CborPathExt, NextArgExt};
-use cbor_data::{Cbor, CborBuilder, CborOwned, ItemKind, Writer};
-use cborpath::{builder::IntoCborOwned, CborPath};
+use cbor_data::{Cbor, CborOwned};
+use cborpath::CborPath;
 use redis_module::{Context, RedisError, RedisResult, RedisString, RedisValue};
-use std::borrow::Cow;
 
 ///
 /// CBOR.NUMINCRBY key path value
@@ -37,46 +37,17 @@ fn num_incr_by(
     cbor_path: &CborPath,
     value: &Cbor,
 ) -> (Option<CborOwned>, Vec<RedisValue>) {
-    let mut new_nums = Vec::<RedisValue>::new();
-
-    let new_value = cbor_path
-        .write(existing, |old_value| {
-            // `Neg` variant carries `-1 - x`
-            match (old_value.kind(), value.kind()) {
-                (ItemKind::Pos(v1), ItemKind::Pos(v2)) => {
-                    let result = IntoCborOwned::into(v1 + v2);
-                    new_nums.push(RedisValue::StringBuffer(result.clone().into_vec()));
-                    Ok(Some(Cow::Owned(result)))
-                }
-                (ItemKind::Pos(v1), ItemKind::Neg(v2)) => {
-                    let result = IntoCborOwned::into(v1 as i64 - 1 - (v2 as i64));
-                    new_nums.push(RedisValue::StringBuffer(result.clone().into_vec()));
-                    Ok(Some(Cow::Owned(result)))
-                }
-                (ItemKind::Neg(v1), ItemKind::Pos(v2)) => {
-                    let result = IntoCborOwned::into(v2 as i64 - 1 - (v1 as i64));
-                    new_nums.push(RedisValue::StringBuffer(result.clone().into_vec()));
-                    Ok(Some(Cow::Owned(result)))
-                }
-                (ItemKind::Neg(v1), ItemKind::Neg(v2)) => {
-                    let result = CborBuilder::new().write_neg(v1 + v2 + 1, None);
-                    new_nums.push(RedisValue::StringBuffer(result.clone().into_vec()));
-                    Ok(Some(Cow::Owned(result)))
-                }
-                (ItemKind::Float(v1), ItemKind::Float(v2)) => {
-                    let result = IntoCborOwned::into(v1 + v2);
-                    new_nums.push(RedisValue::StringBuffer(result.clone().into_vec()));
-                    Ok(Some(Cow::Owned(result)))
-                }
-                _ => {
-                    new_nums.push(RedisValue::Null);
-                    Ok(Some(Cow::Borrowed(old_value)))
-                }
-            }
-        })
-        .unwrap();
-
-    (new_value, new_nums)
+    num_operation(existing, cbor_path, value, |v1, v2| match (v1, v2) {
+        (Number::Signed(v1), Number::Signed(v2)) => Some(Number::Signed(v1 + v2)),
+        (Number::Signed(v1), Number::Unsigned(v2)) => Some(Number::Signed(v1 + v2 as i64)),
+        (Number::Signed(v1), Number::Float(v2)) => Some(Number::Float(v1 as f64 + v2)),
+        (Number::Unsigned(v1), Number::Signed(v2)) => Some(Number::Signed(v1 as i64 + v2)),
+        (Number::Unsigned(v1), Number::Unsigned(v2)) => Some(Number::Unsigned(v1 + v2)),
+        (Number::Unsigned(v1), Number::Float(v2)) => Some(Number::Float(v1 as f64 + v2)),
+        (Number::Float(v1), Number::Signed(v2)) => Some(Number::Float(v1 + v2 as f64)),
+        (Number::Float(v1), Number::Unsigned(v2)) => Some(Number::Float(v1 + v2 as f64)),
+        (Number::Float(v1), Number::Float(v2)) => Some(Number::Float(v1 + v2 as f64)),
+    })
 }
 
 #[cfg(test)]
@@ -87,7 +58,7 @@ mod tests {
     use redis_module::RedisValue;
 
     #[test]
-    fn incr_by_integer() {
+    fn integer() {
         let cbor = diag_to_cbor("[2,-2]");
         let cbor_path = CborPath::builder().wildcard().build();
 
@@ -115,24 +86,46 @@ mod tests {
     }
 
     #[test]
-    fn incr_by_float() {
-        let cbor = diag_to_cbor("[12.13,-12.12]");
+    fn float() {
+        let cbor = diag_to_cbor("[12.0,12]");
         let cbor_path = CborPath::builder().wildcard().build();
 
-        let value = diag_to_cbor("2.02");
+        let value = diag_to_cbor("2.0");
         let (new_value, nem_nums) = num_incr_by(&cbor, &cbor_path, &value);
-        assert_eq!(diag_to_cbor("[14.15,-10.1]"), new_value.unwrap());
+        assert_eq!(diag_to_cbor("[14.0,14.0]"), new_value.unwrap());
         assert_eq!(
             vec![
-                RedisValue::StringBuffer(diag_to_bytes("14.15")),
-                RedisValue::StringBuffer(diag_to_bytes("-10.1")),
+                RedisValue::StringBuffer(diag_to_bytes("14.0")),
+                RedisValue::StringBuffer(diag_to_bytes("14.0")),
+            ],
+            nem_nums
+        );
+
+        let value = diag_to_cbor("2");
+        let (new_value, nem_nums) = num_incr_by(&cbor, &cbor_path, &value);
+        assert_eq!(diag_to_cbor("[14.0,14]"), new_value.unwrap());
+        assert_eq!(
+            vec![
+                RedisValue::StringBuffer(diag_to_bytes("14.0")),
+                RedisValue::StringBuffer(diag_to_bytes("14")),
+            ],
+            nem_nums
+        );
+
+        let value = diag_to_cbor("-2");
+        let (new_value, nem_nums) = num_incr_by(&cbor, &cbor_path, &value);
+        assert_eq!(diag_to_cbor("[10.0,10]"), new_value.unwrap());
+        assert_eq!(
+            vec![
+                RedisValue::StringBuffer(diag_to_bytes("10.0")),
+                RedisValue::StringBuffer(diag_to_bytes("10")),
             ],
             nem_nums
         );
     }
 
     #[test]
-    fn incr_by() {
+    fn multiple() {
         let cbor = diag_to_cbor(r#"{"a":"b","b":[{"a":2}, {"a":5}, {"a":"c"}]}"#);
         let cbor_path = CborPath::builder().descendant(segment().key("a")).build();
         let value = diag_to_cbor("2");
