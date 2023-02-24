@@ -25,6 +25,7 @@ redis_module! {
         ["cbor.del", commands::cbor_del, "write deny-oom", 1, 1, 1],
         ["cbor.get", commands::cbor_get, "readonly", 1, 1, 1],
         ["cbor.mapkeys", commands::cbor_mapkeys, "readonly", 1, 1, 1],
+        ["cbor.maplen", commands::cbor_map_len, "readonly", 1, 1, 1],
         ["cbor.mget", commands::cbor_mget, "readonly", 1,1,1],
         ["cbor.numincrby", commands::cbor_num_incr_by, "write deny-oom", 1,1,1],
         ["cbor.nummultby", commands::cbor_num_mult_by, "write deny-oom", 1,1,1],
