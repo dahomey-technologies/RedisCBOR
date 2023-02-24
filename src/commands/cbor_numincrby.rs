@@ -7,6 +7,7 @@ use redis_module::{Context, RedisError, RedisResult, RedisString, RedisValue};
 ///
 /// CBOR.NUMINCRBY key path value
 ///
+/// Increment the number value stored at path by number
 pub fn cbor_num_incr_by(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
     let mut args = args.iter().skip(1);
 

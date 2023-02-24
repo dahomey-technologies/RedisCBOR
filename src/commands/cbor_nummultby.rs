@@ -7,6 +7,7 @@ use redis_module::{Context, RedisError, RedisResult, RedisString, RedisValue};
 ///
 /// CBOR.NUMMULTBY key path value
 ///
+/// Multiply the number value stored at path by number
 pub fn cbor_num_mult_by(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
     let mut args = args.iter().skip(1);
 
