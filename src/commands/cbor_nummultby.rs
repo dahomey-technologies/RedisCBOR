@@ -27,7 +27,7 @@ pub fn cbor_num_mult_by(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
 
     if let Some(new_value) = new_value {
         key.set_cbor_value(new_value)?;
-        apply_changes(ctx, "cbor.numincrby", key_name)?;
+        apply_changes(ctx, "cbor.nummultby", key_name)?;
     }
 
     Ok(new_nums.into())
