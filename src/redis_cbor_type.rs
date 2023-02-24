@@ -69,7 +69,6 @@ unsafe extern "C" fn free(value: *mut c_void) {
     }
 
     let cbor = value.cast::<CborOwned>();
-    // Take ownership of the data from Redis (causing it to be dropped when we return)
     std::mem::drop(Box::from_raw(cbor));
 }
 

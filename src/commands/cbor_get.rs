@@ -3,6 +3,10 @@ use cbor_data::{CborBuilder, CborOwned, Writer};
 use cborpath::CborPath;
 use redis_module::{Context, RedisResult, RedisString, RedisValue};
 
+///
+/// CBOR.GET key [path]
+///
+/// Return the value at path in JSON serialized form
 pub fn cbor_get(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
     let mut args = args.iter().skip(1);
 
