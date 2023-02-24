@@ -9,6 +9,7 @@ mod cbor_debug;
 mod cbor_del;
 mod cbor_get;
 mod cbor_mget;
+mod cbor_numincrby;
 mod cbor_set;
 
 pub use cbor_arrappend::*;
@@ -22,4 +23,5 @@ pub use cbor_debug::*;
 pub use cbor_del::*;
 pub use cbor_get::*;
 pub use cbor_mget::*;
+pub use cbor_numincrby::*;
 pub use cbor_set::*;

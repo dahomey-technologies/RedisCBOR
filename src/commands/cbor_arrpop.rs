@@ -10,7 +10,7 @@ use redis_module::{Context, RedisError, RedisResult, RedisString, RedisValue};
 ///
 /// Remove and return an element from the index in the array at path in key
 pub fn cbor_arr_pop(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
-    let mut args = args.iter().skip(1).peekable();
+    let mut args = args.iter().skip(1);
 
     let key_name = args.next_arg()?;
     let cbor_path = match args.next_arg() {
