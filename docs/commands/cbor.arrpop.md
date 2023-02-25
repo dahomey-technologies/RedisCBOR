@@ -53,7 +53,7 @@ redis> CBOR.ARRPOP key "\x82\x61$\xa1\x61*\x01"
 
 Get the updated document.
 ```bash
-# value: {"foo":12,"bar":["a","b"]}
+# result: {"foo":12,"bar":["a","b"]}
 redis> CBOR.GET key
 "\x81\xa2cfoo\x0ccbar\x82aaab"
 ```

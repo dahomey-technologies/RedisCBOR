@@ -20,7 +20,7 @@ the value to set at the specified path
 ### path
 the CBORPath to specify. 
 
-Default is root `"\x81\x61$"` (`["$"]`). For new Redis keys the `path` must be the root. For existing keys, when the entire `path` exists, the value that it contains is replaced with the CBOR value. 
+For new Redis keys the `path` must be the root. For existing keys, when the entire `path` exists, the value that it contains is replaced with the CBOR value. 
 
 ## Optional arguments
 
@@ -62,7 +62,7 @@ OK
 # value: 3
 redis> CBOR.SET key "\x82\x61$\xa1\x62..\x61a" "\x03"
 OK
-# value: {"f1": {"a":1}, "f2":{"a":3}}
+# result: {"f1": {"a":1}, "f2":{"a":3}}
 redis> CBOR.GET key
 "{\"f1\":{\"a\":3},\"f2\":{\"a\":3}}"
 ```

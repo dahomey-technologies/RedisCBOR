@@ -44,7 +44,7 @@ redis> CBOR.ARRAPPEND key "\x82\x61$\x63foo" "\x61d"
 
 Get the updated document.
 ```bash
-# value: {"foo":["a","b","c","d"]}
+# result: {"foo":["a","b","c","d"]}
 redis> CBOR.GET key
 "\x81\xa1cfoo\x84aaabacad"
 ```
