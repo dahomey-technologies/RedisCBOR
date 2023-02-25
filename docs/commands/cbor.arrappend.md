@@ -28,8 +28,7 @@ For more information about replies, see [Redis serialization protocol specificat
 
 ## Examples
 
-Create a document with a sub-array
-
+Create a map with a sub-array.
 ```bash
 # path: ["$"] 
 # value: {"foo":["a","b","c"]}
@@ -38,7 +37,6 @@ OK
 ```
 
 Add `"d"` to the end of the sub-array. `CBOR.ARRAPEND` returns the array's new size.
-
 ```bash
 # path: ["$", "foo"] 
 # value: "d"
@@ -46,8 +44,7 @@ redis> CBOR.ARRAPPEND key "\x82\x61$\x63foo" "\x61d"
 1) (integer) 4
 ```
 
-Return the new document version
-
+Return the new map version.
 ```bash
 # value: {"foo":["a","b","c","d"]}
 redis> CBOR.GET key
@@ -56,4 +53,4 @@ redis> CBOR.GET key
 
 ## See also
 
-[`CBOR.ARRINDEX`](cbor.arrindex.md) | [`CBOR.ARRINSERT`](cbor.arrinsert.md) | [`CBOR.ARRLEN`](cbor.arrlen.md)
+[`CBOR.ARRINDEX`](cbor.arrindex.md) | [`CBOR.ARRINSERT`](cbor.arrinsert.md) | [`CBOR.ARRLEN`](cbor.arrlen.md) | [`CBOR.ARRPOP`](cbor.arrpop.md) | [`CBOR.ARRTRIM`](cbor.arrtrim.md)
