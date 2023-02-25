@@ -89,12 +89,12 @@ where
             for item in existing_items
                 .into_iter()
                 .skip(start as usize)
-                .take((stop - start) as usize)
+                .take((stop - start + 1) as usize)
             {
                 builder.write_item(item);
             }
 
-            array_sizes.push(RedisValue::Integer((stop - start) as i64));
+            array_sizes.push(RedisValue::Integer((stop - start + 1) as i64));
         }
     })
 }
@@ -113,11 +113,11 @@ mod tests {
         // ["$"]
         let cbor_path = CborPath::root();
 
-        let (new_value, array_sizes) = array_trim(&cbor, &cbor_path, 1, 4);
+        let (new_value, array_sizes) = array_trim(&cbor, &cbor_path, 1, 3);
         assert_eq!(r#"["b","c","d"]"#, cbor_to_diag(&new_value.unwrap()));
         assert_eq!(vec![RedisValue::Integer(3)], array_sizes);
 
-        let (new_value, array_sizes) = array_trim(&cbor, &cbor_path, -4, -1);
+        let (new_value, array_sizes) = array_trim(&cbor, &cbor_path, -4, -2);
         assert_eq!(r#"["b","c","d"]"#, cbor_to_diag(&new_value.unwrap()));
         assert_eq!(vec![RedisValue::Integer(3)], array_sizes);
 
@@ -125,9 +125,9 @@ mod tests {
         assert_eq!(r#"[]"#, cbor_to_diag(&new_value.unwrap()));
         assert_eq!(vec![RedisValue::Integer(0)], array_sizes);
 
-        let (new_value, array_sizes) = array_trim(&cbor, &cbor_path, 6, 6);
-        assert_eq!(r#"[]"#, cbor_to_diag(&new_value.unwrap()));
-        assert_eq!(vec![RedisValue::Integer(0)], array_sizes);
+        let (new_value, array_sizes) = array_trim(&cbor, &cbor_path, 4, 4);
+        assert_eq!(r#"["e"]"#, cbor_to_diag(&new_value.unwrap()));
+        assert_eq!(vec![RedisValue::Integer(1)], array_sizes);
     }
 
     #[test]
@@ -136,7 +136,7 @@ mod tests {
 
         // ["$", "foo"]
         let cbor_path = CborPath::builder().key("foo").build();
-        let (new_value, array_sizes) = array_trim(&cbor, &cbor_path, 1, 4);
+        let (new_value, array_sizes) = array_trim(&cbor, &cbor_path, 1, 3);
 
         assert_eq!(
             r#"{"foo":["b","c","d"]}"#,
@@ -151,7 +151,7 @@ mod tests {
 
         // ["$", {"*":1}]
         let cbor_path = CborPath::builder().wildcard().build();
-        let (new_value, array_sizes) = array_trim(&cbor, &cbor_path, 1, 4);
+        let (new_value, array_sizes) = array_trim(&cbor, &cbor_path, 1, 3);
 
         assert_eq!(
             r#"{"foo":["b","c","d"],"bar":[2,3,4]}"#,
@@ -169,7 +169,7 @@ mod tests {
 
         // ["$", {"*":1}]
         let cbor_path = CborPath::builder().wildcard().build();
-        let (new_value, array_sizes) = array_trim(&cbor, &cbor_path, 1, 4);
+        let (new_value, array_sizes) = array_trim(&cbor, &cbor_path, 1, 3);
 
         assert_eq!(
             r#"{"foo":12,"bar":[2,3,4]}"#,
