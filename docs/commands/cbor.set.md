@@ -2,7 +2,7 @@
 
 ### Syntax
 ```bash
-CBOR.SET key key path value [NX | XX]
+CBOR.SET key path value [NX | XX]
 ```
 
 Set the CBOR value at `path` in `key`.

@@ -30,7 +30,7 @@ Out-of-range indexes round to their respective array ends. Popping an empty arra
 
 ## Return
 
-`CBOR.ARRPOP` returns an [array](/docs/reference/protocol-spec/#resp-arrays) of bulk string replies for each path, each reply is the popped CBOR value, or `nil`, if the matching JSON value is not an array.
+`CBOR.ARRPOP` returns an [array](/docs/reference/protocol-spec/#resp-arrays) of bulk string replies for each path, each reply is the popped CBOR value, or `nil`, if the matching CBOR value is not an array.
 For more information about replies, see [Redis serialization protocol specification](/docs/reference/protocol-spec). 
 
 ## Examples
