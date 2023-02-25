@@ -2,6 +2,11 @@
 
 Append the `CBOR` values into the array at `path` after the last element in it, at `key`.
 
+### Syntax
+```bash
+CBOR.ARRAPPEND key path value [value ...]
+```
+
 ## Required arguments
 
 <details open><summary><code>key</code></summary> 
