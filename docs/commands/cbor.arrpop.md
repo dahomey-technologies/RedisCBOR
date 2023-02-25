@@ -1,7 +1,9 @@
 # CBOR.ARRPOP
 
 ### Syntax
+```bash
 CBOR.ARRPOP key [path [index]]
+```
 
 Remove and return an element from the index in the array
 
