@@ -17,7 +17,6 @@ the CBORPath to specify.
 
 ### value
 one or more values to append to one or more arrays. 
-</details>
 
 ## Return value 
 

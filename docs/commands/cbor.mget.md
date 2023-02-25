@@ -11,7 +11,7 @@ Return the values at `path` from multiple `key` arguments
 ## Required arguments
 
 ### key
-the key to parse. Returns `null` for nonexistent keys.
+the key(s) to parse. Returns `null` for nonexistent keys.
 
 ### path
 is CBORPath to specify. Returns `null` for nonexistent paths.
@@ -43,7 +43,6 @@ redis> CBOR.MGET key1 key2 "\x82\x61$\xa1\x62..\x61a"
 1) "\x82\x01\x03"
 2) "\x82\x04\x06"
 ```
-</details>
 
 ## See also
 
