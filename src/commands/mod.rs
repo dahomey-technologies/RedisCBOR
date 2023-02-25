@@ -18,6 +18,7 @@ mod cbor_resp;
 mod cbor_set;
 mod cbor_strappend;
 mod cbor_strlen;
+mod cbor_toggle;
 mod num_operation;
 
 pub use cbor_arrappend::*;
@@ -40,3 +41,4 @@ pub use cbor_resp::*;
 pub use cbor_set::*;
 pub use cbor_strappend::*;
 pub use cbor_strlen::*;
+pub use cbor_toggle::*;

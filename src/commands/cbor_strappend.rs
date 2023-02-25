@@ -27,7 +27,7 @@ pub fn cbor_str_append(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
 
     if let Some(new_value) = new_value {
         key.set_cbor_value(new_value)?;
-        apply_changes(ctx, "cbor.numincrby", key_name)?;
+        apply_changes(ctx, "cbor.strappend", key_name)?;
     }
 
     Ok(str_lengths.into())

@@ -34,5 +34,6 @@ redis_module! {
         ["cbor.set", commands::cbor_set, "write deny-oom", 1, 1, 1],
         ["cbor.strappend", commands::cbor_str_append, "write deny-oom", 1, 1, 1],
         ["cbor.strlen", commands::cbor_str_len, "readonly", 1,1,1],
+        ["cbor.toggle", commands::cbor_toggle, "write deny-oom", 1, 1, 1],
     ],
 }
