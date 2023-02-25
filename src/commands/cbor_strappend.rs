@@ -7,6 +7,7 @@ use std::borrow::Cow;
 ///
 /// CBOR.STRAPPEND key path value
 ///
+/// Append the CBOR-string value to the string at path
 pub fn cbor_str_append(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
     let mut args = args.iter().skip(1).peekable();
 
@@ -65,7 +66,7 @@ mod tests {
     use redis_module::RedisValue;
 
     #[test]
-    fn integer() {
+    fn test() {
         let cbor = diag_to_cbor(r#"{"a":"foo", "nested": {"a": "hello"}, "nested2": {"a": 12}}"#);
         let cbor_path = CborPath::builder().descendant(segment().key("a")).build();
         let value = "baz";
