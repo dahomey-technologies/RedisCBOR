@@ -24,7 +24,7 @@ pub fn cbor_arr_len(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
     Ok(array_len(existing, &cbor_path).into())
 }
 
-pub fn array_len(existing: &CborOwned, cbor_path: &CborPath) -> Vec<RedisValue> {
+fn array_len(existing: &CborOwned, cbor_path: &CborPath) -> Vec<RedisValue> {
     let results = cbor_path.read(existing);
     results
         .into_iter()

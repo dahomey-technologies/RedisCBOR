@@ -20,6 +20,7 @@ mod cbor_strappend;
 mod cbor_strlen;
 mod cbor_toggle;
 mod num_operation;
+mod cbor_type;
 
 pub use cbor_arrappend::*;
 pub use cbor_arrindex::*;
@@ -42,3 +43,4 @@ pub use cbor_set::*;
 pub use cbor_strappend::*;
 pub use cbor_strlen::*;
 pub use cbor_toggle::*;
+pub use cbor_type::*;
