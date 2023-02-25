@@ -149,7 +149,7 @@ mod tests {
     fn multiple_arrays() {
         let cbor = diag_to_cbor(r#"{"foo":["a","b","c","d","e"],"bar":[1,2,3,4,5]}"#);
 
-        // ["$", "*"]
+        // ["$", {"*":1}]
         let cbor_path = CborPath::builder().wildcard().build();
         let (new_value, array_sizes) = array_trim(&cbor, &cbor_path, 1, 4);
 
@@ -167,7 +167,7 @@ mod tests {
     fn not_an_array() {
         let cbor = diag_to_cbor(r#"{"foo":12,"bar":[1,2,3,4,5]}"#);
 
-        // ["$", "*"]
+        // ["$", {"*":1}]
         let cbor_path = CborPath::builder().wildcard().build();
         let (new_value, array_sizes) = array_trim(&cbor, &cbor_path, 1, 4);
 

@@ -128,7 +128,7 @@ mod tests {
         let key2 = diag_to_cbor(r#""d""#);
         let item2 = diag_to_cbor("4");
 
-        // ["$", "*"]
+        // ["$", {"*":1}]
         let cbor_path = CborPath::builder().wildcard().build();
         let (new_value, array_sizes) = map_append(&cbor, &cbor_path, vec![(&key1, &item1), (&key2, &item2)]);
 
@@ -151,7 +151,7 @@ mod tests {
         let item2 = diag_to_cbor("4");
 
 
-        // ["$", "*"]
+        // ["$", {"*":1}]
         let cbor_path = CborPath::builder().wildcard().build();
         let (new_value, array_sizes) = map_append(&cbor, &cbor_path, vec![(&key1, &item1), (&key2, &item2)]);
 

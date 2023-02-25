@@ -138,7 +138,7 @@ mod tests {
         let cbor = diag_to_cbor(r#"{"foo":["a","b","c"],"bar":["c","b","a"]}"#);
         let value = diag_to_cbor(r#""c""#);
 
-        // ["$", "*"]
+        // ["$", {"*":1}]
         let cbor_path = CborPath::builder().wildcard().build();
         let results = array_index(&cbor, &cbor_path, &value, 0, 4);
 
@@ -153,7 +153,7 @@ mod tests {
         let cbor = diag_to_cbor(r#"{"foo":12,"bar":["a","b","c"]}"#);
         let value = diag_to_cbor(r#""d""#);
 
-        // ["$", "*"]
+        // ["$", {"*":1}]
         let cbor_path = CborPath::builder().wildcard().build();
         let results = array_index(&cbor, &cbor_path, &value, 0, 4);
 
