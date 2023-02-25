@@ -46,7 +46,7 @@ redis> CBOR.ARRINSERT key "\x82\x61$\x63foo" 2 "\x61d" "\x61e"
 1) (integer) 5
 ```
 
-Return the new map version.
+Get the updated document.
 ```bash
 # value: {"foo":["a","b","d","e","c"]}
 redis> CBOR.GET key

@@ -42,7 +42,7 @@ redis> CBOR.ARRAPPEND key "\x82\x61$\x63foo" "\x61d"
 1) (integer) 4
 ```
 
-Return the new map version.
+Get the updated document.
 ```bash
 # value: {"foo":["a","b","c","d"]}
 redis> CBOR.GET key
