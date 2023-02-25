@@ -5,7 +5,7 @@
 CBOR.ARRPOP key [path [index]]
 ```
 
-Remove and return an element from the index in the array
+Remove and return an element from the `index` in the array at `path` in `key`.
 
 [Examples](#examples)
 

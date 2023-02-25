@@ -5,7 +5,7 @@
 CBOR.ARRINSERT key path index value [value ...]
 ```
 
-Insert the CBOR values into the array at `path` before the index (shifts to the right), at `key`.
+Insert the CBOR values into the array at `path` before the index (shifts to the right),  in `key`.
 
 ## Required arguments
 

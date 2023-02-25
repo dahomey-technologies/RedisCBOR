@@ -5,7 +5,7 @@
 CBOR.ARRINDEX key path value [start [stop]]
 ```
 
-Search for the first occurrence of a CBOR `value` in an array, at `key`.
+Search for the first occurrence of a CBOR `value` in an array,  in `key`.
 
 ## Required arguments
 

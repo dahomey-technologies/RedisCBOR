@@ -5,7 +5,7 @@
 CBOR.ARRLEN key [path]
 ```
 
-Report the length of the CBOR array at `path` in `key`
+Report the length of the CBOR array at `path` in `key`.
 
 ## Required arguments
 

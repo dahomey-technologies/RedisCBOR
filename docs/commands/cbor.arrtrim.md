@@ -5,7 +5,7 @@
 CBOR.ARRTRIM key [path [start [stop]]]
 ```
 
-Trim an array so that it contains only the specified inclusive range of elements
+Trim an array so that it contains only the specified inclusive range of elements at `path` in `key`.
 
 ## Required arguments
 

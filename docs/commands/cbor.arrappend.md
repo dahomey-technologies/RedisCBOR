@@ -5,7 +5,7 @@
 CBOR.ARRAPPEND key path value [value ...]
 ```
 
-Append the `CBOR` values into the array at `path` after the last element in it, at `key`.
+Append the `CBOR` values into the array at `path` after the last element in it, in `key`.
 
 ## Required arguments
 
