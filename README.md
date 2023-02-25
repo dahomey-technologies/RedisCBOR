@@ -52,3 +52,6 @@ Alternatively add the following to a redis.conf file:
 ```bash
 loadmodule /path/to/modules/librecbor.so
 ```
+
+## Documentation
+Read the docs at [here](docs)
