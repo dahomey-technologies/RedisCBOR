@@ -9,15 +9,13 @@ CBOR.ARRAPPEND key path value [value ...]
 
 ## Required arguments
 
-<details open><summary><code>key</code></summary> 
+### key
 the key to modify.
-</details>
 
-<details open><summary><code>path</code></summary> 
+### path
 the CBORPath to specify.
-</details>
 
-<details open><summary><code>value</code></summary> 
+### value
 one or more values to append to one or more arrays. 
 </details>
 
