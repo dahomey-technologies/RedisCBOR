@@ -1,5 +1,5 @@
 # CBOR.ARRINDEX
-Search for the first occurrence of a CBOR `value` in an array
+Search for the first occurrence of a CBOR `value` in an array, at `key`.
 
 ### Syntax
 ```bash
