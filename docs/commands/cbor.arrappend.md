@@ -51,4 +51,4 @@ redis> CBOR.GET key
 
 ## See also
 
-[`CBOR.ARRINDEX`](docs/commands/cbor.arrindex.md) | [`CBOR.ARRINSERT`](docs/commands/cbor.arrinsert.md) | [`CBOR.ARRLEN`](docs/commands/cbor.arrlen.md)
+[`CBOR.ARRINDEX`](cbor.arrindex.md) | [`CBOR.ARRINSERT`](cbor.arrinsert.md) | [`CBOR.ARRLEN`](cbor.arrlen.md)
