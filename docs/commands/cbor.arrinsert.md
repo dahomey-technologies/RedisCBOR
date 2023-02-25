@@ -1,10 +1,11 @@
 # CBOR.ARRINSERT
-Insert the CBOR values into the array at `path` before the index (shifts to the right), at `key`.
 
 ### Syntax
 ```bash
 CBOR.ARRINSERT key path index value [value ...]
 ```
+
+Insert the CBOR values into the array at `path` before the index (shifts to the right), at `key`.
 
 ## Required arguments
 

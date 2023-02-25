@@ -1,11 +1,11 @@
 # CBOR.ARRAPPEND
 
-Append the `CBOR` values into the array at `path` after the last element in it, at `key`.
-
 ### Syntax
 ```bash
 CBOR.ARRAPPEND key path value [value ...]
 ```
+
+Append the `CBOR` values into the array at `path` after the last element in it, at `key`.
 
 ## Required arguments
 

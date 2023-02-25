@@ -1,11 +1,11 @@
 # CBOR.ARRLEN
 
-Report the length of the CBOR array at `path` in `key`
-
 ### Syntax
 ```bash
 CBOR.ARRLEN key [path]
 ```
+
+Report the length of the CBOR array at `path` in `key`
 
 ## Required arguments
 
@@ -15,7 +15,7 @@ the key to parse.
 ## Optional arguments
 
 ### path
-the CBORPath to specify. Default is root `"\x81\x61$"` (`$`), if not provided. 
+the CBORPath to specify. Default is root `"\x81\x61$"` (`["$"]`), if not provided. 
 
 Returns null if the `key` or `path` do not exist.
 
