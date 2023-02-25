@@ -5,7 +5,7 @@ use redis_module::{Context, RedisError, RedisResult, RedisString};
 /// CBOT.DEBUG <subcommand & arguments>
 ///
 /// subcommands:
-/// MEMORY <key> [path]
+/// MEMORY key
 /// HELP
 ///
 pub fn cbor_debug(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
