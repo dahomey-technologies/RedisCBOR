@@ -72,7 +72,7 @@ pub trait CborExt {
 impl CborExt for Cbor {
     #[inline]
     fn from_arg(arg: &RedisString) -> Result<&Cbor, RedisError> {
-        Cbor::checked(arg.as_slice()).map_err(|_| RedisError::Str("ERR Invalid CBOR path"))
+        Cbor::checked(arg.as_slice()).map_err(|_| RedisError::Str("ERR Invalid CBOR value"))
     }
 }
 

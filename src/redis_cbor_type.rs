@@ -29,6 +29,10 @@ pub static REDIS_CBOR_TYPE: RedisType = RedisType::new(
         unlink: None,
         copy: Some(copy),
         defrag: None,
+        copy2: None,
+        free_effort2: None,
+        mem_usage2: None,
+        unlink2: None,
     },
 );
 

@@ -14,6 +14,7 @@ mod cbor_maplen;
 mod cbor_mget;
 mod cbor_numincrby;
 mod cbor_nummultby;
+mod cbor_resp;
 mod cbor_set;
 mod num_operation;
 
@@ -33,4 +34,5 @@ pub use cbor_maplen::*;
 pub use cbor_mget::*;
 pub use cbor_numincrby::*;
 pub use cbor_nummultby::*;
+pub use cbor_resp::*;
 pub use cbor_set::*;
