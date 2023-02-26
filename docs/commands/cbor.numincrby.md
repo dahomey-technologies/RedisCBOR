@@ -12,11 +12,11 @@ Increment the number value stored at `path` by `number` in `key`
 ### key
 the key to modify.
 
-### value
-the number value to increment. 
-
 ### path
 the CBORPath to specify.
+
+### value
+the number value to increment. 
 
 ## Return 
 
@@ -33,7 +33,7 @@ redis> CBOR.SET key "\x81\x61$" "\xa2\x61a\x61b\x61b\x83\xa1\x61a\x02\xa1\x61a\x
 OK
 ```
 
-Increment a value of `a` map by 2. The command fails to find a number and returns `null`.
+Increment a value of `a` map by 2. The command fails to find a number and returns `nil`.
 ```bash
 # path: ["$", "a"]
 # value: 2
@@ -42,7 +42,7 @@ redis> CBOR.NUMINCRBY key "\x82\x61$\x61a" "\x02"
 1) (nil)
 ```
 
-Recursively find and increment a value of all `a` objects. The command increments numbers it finds and returns `null` for nonnumber values.
+Recursively find and increment a value of all `a` objects. The command increments numbers it finds and returns `nil` for nonnumber values.
 ```bash
 # path: ["$", {"..: "a"}]
 # value: 2
