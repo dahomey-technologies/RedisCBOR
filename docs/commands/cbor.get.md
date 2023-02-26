@@ -19,8 +19,6 @@ the CBORPath to specify.
 
 Default is root `"\x81\x61$"` (`["$"]`). 
 
-{{% alert title="Note" color="warning" %}}
-
 the root of the matching values is a CBOR document with a top-level **array** of serialized CBOR value. 
 
 ## Return

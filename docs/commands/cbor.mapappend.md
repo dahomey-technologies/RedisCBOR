@@ -53,4 +53,4 @@ redis> CBOR.GET key
 
 ## See also
 
-[`CBOR.MAPKEY`](cbor.mapkey.md) | [`CBOR.MAPLEN`](cbor.maplen.md)
+[`CBOR.MAPKEYS`](cbor.mapkeys.md) | [`CBOR.MAPLEN`](cbor.maplen.md)
