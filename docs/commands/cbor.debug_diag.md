@@ -1,11 +1,11 @@
-# CBOR.DEBUG MEMORY
+# CBOR.DEBUG DIAG
 
 ### Syntax
 ```bash
-CBOR.DEBUG MEMORY key
+CBOR.DEBUG DIAG key
 ```
 
-Report a value's memory usage in bytes in `key`
+Display CBOR document in `key` in [CBOR Diagnostic Notation](https://datatracker.ietf.org/doc/html/rfc8949#section-8).
 
 ## Required arguments
 
@@ -14,7 +14,8 @@ the key to parse.
 
 ## Return
 
-CBOR.DEBUG MEMORY returns an integer reply specified as the value size in bytes.
+CBOR.DEBUG DIAG returns a bulk string containing the 
+[CBOR Diagnostic Notation](https://datatracker.ietf.org/doc/html/rfc8949#section-8).
 For more information about replies, see [Redis serialization protocol specification](/docs/reference/protocol-spec).
 
 ## Examples
@@ -27,10 +28,10 @@ redis> CBOR.SET key "\x81\x61$" "\xa6\x63obj\xa2\x61a\x01\x61b\x02\x63arr\x83\x0
 OK
 ```
 
-Get the values' memory usage in bytes.
+Get the CBOR document diagnostic notation
 ```bash
-redis> CBOR.DEBUG MEMORY key
-(integer) 87
+redis> CBOR.DEBUG DIAG key
+"{\"obj\": {\"a\": 1, \"b\": 2}, \"arr\": [1, 2, 3], \"str\": \"foo\", \"bool\": true, \"int\": 42, \"float\": 3.14}"
 ```
 
 ## See also
