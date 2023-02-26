@@ -52,4 +52,4 @@ redis> CBOR.GET key
 
 ## See also
 
-[`CBOR.ARRAPPEND`](cbor.arrappend.md)
+[`CBOR.STRLEN`](cbor.strlen.md) | [`CBOR.ARRAPPEND`](cbor.arrappend.md)
