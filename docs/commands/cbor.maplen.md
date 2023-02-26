@@ -1,27 +1,27 @@
-# CBOR.MAPKEYS
+# CBOR.MAPLEN
 
 ### Syntax
 ```bash
-CBOR.MAPKEYS key [path]
+CBOR.MAPLEN key [path]
 ```
 
-Return the keys in the CBOR map that's referenced by `path`
+Report the number of keys in the CBOR map at `path` in `key`
 
 ## Required arguments
 
-### key
+### keys
 the key to parse. Returns `null` for nonexistent keys.
 
 ## Optional arguments
 
 ### path
-the CBORPath to specify. 
+is CBORPath to specify. 
 
 Default is root `"\x81\x61$"` (`["$"]`). Returns `null` for nonexistant path.
 
 ## Return
 
-CBOR.MAPKEYS returns an array of array replies for each path, an array of the keys in the map as a bulk string reply, or `nil` if the matching CBOR value is not a map. 
+CBOR.MAPLEN returns an array of integer replies for each path specified as the number of keys in the map or `nil`, if the matching CBOR value is not a map.
 For more information about replies, see [Redis serialization protocol specification](/docs/reference/protocol-spec).
 
 ## Examples
@@ -34,16 +34,19 @@ redis> CBOR.SET key "\x81\x61$" "\xa2\x61a\x81\x03\x66nested\xa1\x61a\xa2\x61b\x
 OK
 ```
 
-Get map keys
+Get map length
 ```bash
 # path: ["$", {"..": "a"}]
-# result: "b" and "c"
-redis> CBOR.MAPKEYS key "\x82\x61$\xa1\x62..\x61a"
+redis> CBOR.MAPLEN key "\x82\x61$\xa1\x62..\x61a"
 1) (nil)
-2) 1) "ab"
-   2) "ac"
+2) (integer) 2
 ```
 
 ## See also
 
-[`CBOR.MAPAPPEND`](cbor.mapappend.md) | [`CBOR.MAPLEN`](cbor.maplen.md)
+`JSON.ARRINDEX` | `JSON.ARRINSERT` 
+
+## Related topics
+
+* [RedisJSON](/docs/stack/json)
+* [Index and search JSON documents](/docs/stack/search/indexing_json)
