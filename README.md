@@ -54,4 +54,4 @@ loadmodule /path/to/modules/librecbor.so
 ```
 
 ## Documentation
-Read the docs at [here](docs)
+Read the docs [here](docs/docs/commands.md)
