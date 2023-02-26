@@ -3,7 +3,7 @@
 ### Syntax
 ```bash
 CBOR.RESP key [path]
-``
+```
 
 Return the CBOR in `key` in [Redis serialization protocol specification](/docs/reference/protocol-spec) form 
 
@@ -19,18 +19,18 @@ the CBORPath to specify.
 
 Default is root `"\x81\x61$"` (`["$"]`).
 This command uses the following mapping from CBOR to RESP:
-*   CBOR `null` maps to the `nil` reply.
-*   CBOR `false` and `true` values map to the boolean reply.
+*   CBOR `null` and `undefined` map to the `nil` reply.
+*   CBOR `false` and `true` values map to the boolean reply (RESP3) or integer reply (RESP2)
 *   CBOR number maps to the integer reply or double reply, depending on type.
-*   CBOR string maps to the bulk string reply.
+*   CBOR text string and byte string map to the bulk string reply.
 *   CBOR array is represented as an array reply
-*   CBOR map is represented as a map reply.
+*   CBOR map is represented as a map reply (RESP3) or array reply (RESP2)
 
-For more information about replies, see [Redis serialization protocol specification](/docs/reference/protocol-spec) or [RESP3](https://github.com/redis/redis-specifications/blob/master/protocol/RESP3.md)
+For more information about replies, see [RESP2](/docs/reference/protocol-spec) or [RESP3](https://github.com/redis/redis-specifications/blob/master/protocol/RESP3.md)
 
 ## Return
 
-CBOR.RESP returns an array reply specified as the CBOR RESP form detailed in [Redis serialization protocol specification](/docs/reference/protocol-spec).
+CBOR.RESP returns an array reply specified as the CBOR RESP form detailed in [RESP2](/docs/reference/protocol-spec) or [RESP3](https://github.com/redis/redis-specifications/blob/master/protocol/RESP3.md).
 
 ## Examples
 
