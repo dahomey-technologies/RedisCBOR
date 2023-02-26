@@ -18,7 +18,7 @@ pub fn cbor_debug(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
 
             Ok(key
                 .get_cbor_value()?
-                .map(|v| RedisValue::SimpleString(format!("{v}")))
+                .map(|v| RedisValue::BulkString(format!("{v}")))
                 .unwrap_or(RedisValue::Null))
         }
         "MEMORY" => {
