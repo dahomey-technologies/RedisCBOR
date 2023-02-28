@@ -5,6 +5,10 @@ It allows storing, updating and fetching CBOR documents from Redis keys (documen
 
 It is based on [RedisJson](https://redis.io/docs/stack/json/) for its concepts, its commands and their syntax.
 
+Benefits of CBOR over JSON:
+* ~25% smaller memory footprint / bandwidth, depending on which type are used (text will have the same footprint in JSON or CBOR)
+* integer, floats, boolean and null types should be faster to deserialize because they are encoded in binary, consequently there is no parsing from text to process.
+
 ## Primary features:
 
 * Full support of the CBOR standard
