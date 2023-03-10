@@ -88,8 +88,8 @@ where
         } else {
             for item in existing_items
                 .into_iter()
-                .skip(start as usize)
-                .take((stop - start + 1) as usize)
+                .skip(start)
+                .take(stop - start + 1)
             {
                 builder.write_item(item);
             }

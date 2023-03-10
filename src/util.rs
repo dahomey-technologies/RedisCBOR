@@ -136,7 +136,7 @@ pub fn normalize_index(i: isize, len: usize) -> usize {
 #[cfg(test)]
 pub fn diag_to_cbor(cbor_diag_str: &str) -> CborOwned {
     let buf = diag_to_bytes(cbor_diag_str);
-    CborOwned::canonical(&buf).unwrap()
+    CborOwned::canonical(buf).unwrap()
 }
 
 #[cfg(test)]

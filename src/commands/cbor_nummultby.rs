@@ -47,7 +47,7 @@ fn num_mult_by(
         (Number::Unsigned(v1), Number::Float(v2)) => Some(Number::Float(v1 as f64 * v2)),
         (Number::Float(v1), Number::Signed(v2)) => Some(Number::Float(v1 * v2 as f64)),
         (Number::Float(v1), Number::Unsigned(v2)) => Some(Number::Float(v1 * v2 as f64)),
-        (Number::Float(v1), Number::Float(v2)) => Some(Number::Float(v1 * v2 as f64)),
+        (Number::Float(v1), Number::Float(v2)) => Some(Number::Float(v1 * v2)),
     })
 }
 

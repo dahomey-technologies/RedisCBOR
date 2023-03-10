@@ -39,8 +39,8 @@ pub fn cbor_map_append(ctx: &Context, args: Vec<RedisString>) -> RedisResult {
     Ok(map_sizes.into())
 }
 
-fn map_append<'a>(
-    existing: &'a Cbor,
+fn map_append(
+    existing: &Cbor,
     cbor_path: &CborPath,
     key_value_pairs: Vec::<(&Cbor, &Cbor)>,
 ) -> (Option<CborOwned>, Vec<RedisValue>) {

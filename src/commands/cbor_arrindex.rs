@@ -60,10 +60,10 @@ fn array_index(
                         let start = normalize_index(start, len as usize);
                         let stop = normalize_index(stop, len as usize);
                         array
-                            .skip(start as usize)
-                            .take((stop - start) as usize)
+                            .skip(start)
+                            .take(stop - start)
                             .position(|item| item == value)
-                            .map(|idx| (idx + start as usize) as isize)
+                            .map(|idx| (idx + start) as isize)
                             .unwrap_or_else(|| -1)
                     }
                     None => {
@@ -72,10 +72,10 @@ fn array_index(
                         let stop = normalize_index(stop, array.len());
                         array
                             .into_iter()
-                            .skip(start as usize)
-                            .take((stop - start) as usize)
+                            .skip(start)
+                            .take(stop - start)
                             .position(|item| item == value)
-                            .map(|idx| (idx + start as usize) as isize)
+                            .map(|idx| (idx + start) as isize)
                             .unwrap_or_else(|| -1)
                     }
                 },
