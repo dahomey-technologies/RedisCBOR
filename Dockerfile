@@ -3,23 +3,13 @@ FROM rust as setup
 RUN apt-get update
 RUN apt-get install -y clang
 ENV LIBCLANG_PATH=/usr/lib/x86_64-linux-gnu
-RUN cargo install cargo-chef 
 WORKDIR /build
 
-# Prepare
-FROM setup as prepare
+# Build
+FROM setup as build
 COPY src ./src
 COPY Cargo.toml .
-RUN cargo chef prepare --recipe-path recipe.json
-
-# Cache
-FROM setup as cook
-COPY --from=prepare /build/recipe.json recipe.json
-RUN cargo chef cook --release --recipe-path recipe.json
-
-# Build
-FROM cook as build
-COPY . .
+ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 RUN cargo build --release
 
 # Runtime
