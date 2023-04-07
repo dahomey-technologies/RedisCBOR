@@ -1,6 +1,6 @@
 [package]
 name = "rediscbor"
-version = "99.99.990"
+version = "99.99.99"
 authors = ["Michaël Catanzariti"]
 edition = "2021"
 description = "CBOR data type for Redis"
@@ -22,7 +22,7 @@ cbor-diag = "0.1"
 [dependencies]
 libc = "0.2"
 cbor-data = "0.8"
-cborpath = "0.4"
+cborpath = "0.5"
 redis-module = { git = "https://github.com/mcatanzariti/redismodule-rs", features = ["experimental-api"]}
 
 [features]
